@@ -79,7 +79,7 @@ class ApiDeclarations:
         tclv_to_send = '{"Data": [{"Type": ' + str(type) + ',"Control": 1, "Value": "' + str(value) + '"}]}'
         r = requests.post(self.url + 'api/cmd/Param/' + uuid,
                           headers=self.calc_auth("api/cmd/Param/", "POST", uuid), data=tclv_to_send)
-        return r.status_code, r.content
+        return r.status_code
 
     # --------------------------------------------------------------
 

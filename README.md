@@ -1,4 +1,6 @@
-This is a package implementing Visionect API.
+This is a package implementing Visionect API in Python.
+
+Check [API documentation](https://api.visionect.com/) for more info.
 
 ## Installation
 
@@ -56,3 +58,27 @@ This is a package implementing Visionect API.
  - returns: status code *int*, response *json*
 
 ----
+
+#### Device configuration
+
+##### get configuration list
+
+`get_device_config_list(uuid)`
+
+ - params: uuid *string*
+ - returns: status code *int*, response *json*
+
+##### get configuration
+
+`get_device_config(uuid, tclv_type)`
+
+ - params: uuid *string*, tclv_type *int*
+ - returns: status code *int*, response *json*
+
+##### set configuration
+
+`update_device_config(uuid, tclv_type, value)`
+
+ - params: uuid *string*, tclv_type *int*, value *int*
+ - returns: status code *int*
+
