@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="77289c34-ab81-4eb0-b7fb-b48d300ab4d7" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/README.md" />
-      <change beforePath="$PROJECT_DIR$/dist/vss_python_api-0.1.0-py2-none-any.whl" afterPath="$PROJECT_DIR$/dist/vss_python_api-0.1.0-py2-none-any.whl" />
-      <change beforePath="$PROJECT_DIR$/vss_python_api.egg-info/SOURCES.txt" afterPath="$PROJECT_DIR$/vss_python_api.egg-info/SOURCES.txt" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
     </list>
+    <ignored path="$PROJECT_DIR$/.idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,9 +21,15 @@
             <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/vss_python_api/__init__.py">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="51">
+                  <state relative-caret-position="-51">
                     <caret line="10" column="6" lean-forward="false" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
-                    <folding />
+                    <folding>
+                      <element signature="e#192#258#0" expanded="false" />
+                      <element signature="e#336#1293#0" expanded="false" />
+                      <element signature="e#1423#1563#0" expanded="false" />
+                      <element signature="e#1619#1778#0" expanded="false" />
+                      <element signature="e#1823#1970#0" expanded="false" />
+                    </folding>
                   </state>
                 </provider>
               </entry>
@@ -39,12 +45,14 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="306">
-                <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+              <first_editor relative-caret-position="498">
+                <caret line="57" column="46" lean-forward="false" selection-start-line="57" selection-start-column="46" selection-end-line="57" selection-end-column="46" />
                 <folding />
               </first_editor>
               <second_editor>
-                <js_state />
+                <js_state>
+                  <onLoadScroll type="JSON" value="{&quot;x&quot;:0,&quot;y&quot;:372}" />
+                </js_state>
               </second_editor>
             </state>
           </provider>
@@ -197,6 +205,21 @@
             <folding />
           </first_editor>
           <second_editor>
+            <js_state>
+              <onLoadScroll type="JSON" value="{&quot;x&quot;:0,&quot;y&quot;:372}" />
+            </js_state>
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LICENCE.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor>
             <js_state />
           </second_editor>
         </state>
@@ -204,21 +227,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/vss_python_api/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
+        <state relative-caret-position="-51">
           <caret line="10" column="6" lean-forward="false" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
-          <folding />
+          <folding>
+            <element signature="e#192#258#0" expanded="false" />
+            <element signature="e#336#1293#0" expanded="false" />
+            <element signature="e#1423#1563#0" expanded="false" />
+            <element signature="e#1619#1778#0" expanded="false" />
+            <element signature="e#1823#1970#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="306">
-            <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <first_editor relative-caret-position="498">
+            <caret line="57" column="46" lean-forward="false" selection-start-line="57" selection-start-column="46" selection-end-line="57" selection-end-column="46" />
             <folding />
           </first_editor>
           <second_editor>
-            <js_state />
+            <js_state>
+              <onLoadScroll type="JSON" value="{&quot;x&quot;:0,&quot;y&quot;:372}" />
+            </js_state>
           </second_editor>
         </state>
       </provider>
