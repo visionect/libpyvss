@@ -1,5 +1,6 @@
-/tests/*
-/dist/*
-/build/*
+tests/*
+dist/*
+build/*
 setup.py
-/vss_python_api.egg-info/*
+vss_python_api.egg-info/*
+.idea
