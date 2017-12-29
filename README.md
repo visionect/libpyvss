@@ -12,9 +12,7 @@ This is a package implementing Visionect API.
 
 `status_code, response = {object_name}.{function({params})}`
 
-### Function list
-
------
+## Function list
 
 #### Device
 
