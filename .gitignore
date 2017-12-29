@@ -1,0 +1,5 @@
+/tests/*
+/dist/*
+/build/*
+setup.py
+/vss_python_api.egg-info/*
