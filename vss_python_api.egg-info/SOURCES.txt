@@ -1,8 +1,0 @@
-README.md
-setup.py
-vss_python_api/__init__.py
-vss_python_api.egg-info/PKG-INFO
-vss_python_api.egg-info/SOURCES.txt
-vss_python_api.egg-info/dependency_links.txt
-vss_python_api.egg-info/requires.txt
-vss_python_api.egg-info/top_level.txt
