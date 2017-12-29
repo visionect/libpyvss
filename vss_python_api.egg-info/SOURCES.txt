@@ -1,3 +1,4 @@
+README.md
 setup.py
 vss_python_api/__init__.py
 vss_python_api.egg-info/PKG-INFO
