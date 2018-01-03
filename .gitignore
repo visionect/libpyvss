@@ -4,4 +4,3 @@ build/*
 setup.py
 vss_python_api.egg-info/*
 .idea
-.gitignore
