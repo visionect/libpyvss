@@ -8,8 +8,9 @@ API endpoints and responses are subject to change, so make sure to follow [relea
 
 ### Installation
 
-`pip install vss-python-api`
-
+```bash
+pip install vss-python-api`
+```
 ### Use
 
 ```python
