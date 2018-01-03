@@ -12,11 +12,11 @@ API endpoints and responses are subject to change, so make sure to follow [relea
 
 ### Use
 
-`from vss_python_api import ApiDeclarations`
-
-`{object_name} = ApiDeclarations(url, key, secret)`
-
-`status_code, response (optional) = {object_name}.{function({params})}`
+```python
+from vss_python_api import ApiDeclarations
+vss_api_instance = ApiDeclarations(url, key, secret)
+status_code, response (optional) = vss_api_instance.{function(params)}
+```
 
 ### Function list
 
@@ -147,7 +147,7 @@ API endpoints and responses are subject to change, so make sure to follow [relea
 
  - params: session_object *json*
     - example:
-        ```
+        ```python
         session_object = {
             "Uuid": {uuid},
             "Backend": {
@@ -208,7 +208,7 @@ API endpoints and responses are subject to change, so make sure to follow [relea
 
  - params: username *string*, user_object *json*
     - example:
-    ```
+    ```python
     {
         "Username": {username},
         "Password": {password},
