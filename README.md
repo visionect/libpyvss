@@ -1,4 +1,4 @@
-This is a package implementing Visionect API in Python.
+This is a package implementing Visionect API in Python (version 2.7).
 
 Check [API documentation](https://api.visionect.com/) for more info.
 
@@ -285,3 +285,20 @@ status_code, response (optional) = vss_api_instance.{function(params)}
  `get_status()`
 
  - returns: status_code *int*, response *json*
+
+----
+
+#### HTTP Backend
+
+Upload an image to the device via HTTP backend. Make sure device's backend is set to the HTTP.
+
+ `set_http(uuid, img)`
+
+ - params: uuid *string*, img *file*
+    - example:
+    ```python
+        img = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'img.png')
+        fr = {'image': ('img.png', open(img, 'rb'), 'image/png', {'Expires': '0'})}
+        sc = my_api.set_http(uuid, fr)
+    ```
+ - returns: status_code *int*

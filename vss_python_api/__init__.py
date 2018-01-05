@@ -5,6 +5,7 @@ import hashlib
 import time
 import wsgiref.handlers
 import json
+from requests_toolbelt import MultipartEncoder
 
 
 class ApiDeclarations:
@@ -13,38 +14,31 @@ class ApiDeclarations:
         self.key = key
         self.secret = secret
 
-    def calc_auth(self, endpoint, verb, uid=None, multipart=False):
+    def calc_auth(self, endpoint, verb, content_type='application/json', dt=time.time(), content=""):
         headers = {
-            'Date': wsgiref.handlers.format_date_time(time.time()),
-            'Content-Type': 'application/json'
+            'Date': wsgiref.handlers.format_date_time(dt),
+            'Content-Type': content_type
         }
-
-        if uid is not None:
-            h = hmac.new(self.secret, verb + '\n\n' + headers['Content-Type'] + '\n' + headers['Date'] + '\n/' + endpoint + uid, hashlib.sha256)
-            headers['Authorization'] = self.key + ':' + base64.encodestring(h.digest()).strip()
-
-        elif multipart is not False:
-            h = hmac.new(self.secret, verb + '\n\n' + 'multipart/form-data' + '\n' + headers['Date'] + '\n/' + endpoint + uid, hashlib.sha256)
-            headers['Authorization'] = self.key + ':' + base64.encodestring(h.digest()).strip()
-
-        else:
-            h = hmac.new(self.secret, verb + '\n\n' + headers['Content-Type'] + '\n' + headers['Date'] + '\n/' + endpoint, hashlib.sha256)
-            headers['Authorization'] = self.key + ':' + base64.encodestring(h.digest()).strip()
+        h = hmac.new(self.secret, verb + '\n' + content + '\n' + headers['Content-Type'] + '\n' + headers['Date'] + '\n/' + endpoint, hashlib.sha256)
+        headers['Authorization'] = self.key + ':' + base64.encodestring(h.digest()).strip()
 
         return headers
 
     #       DEVICE
     # --------------------------------------------------------------
     def get_device(self, uuid):
-        r = requests.get(self.url + 'api/device/' + uuid, headers=self.calc_auth("api/device/", "GET", uuid))
+        endpoint = 'api/device/' + uuid
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code, r.json()
 
-    def update_device(self,uuid, new_device):
-        r = requests.put(self.url + 'api/device/' + uuid, headers=self.calc_auth("api/device/", "PUT", uuid), data=json.dumps(new_device))
+    def update_device(self, uuid, new_device):
+        endpoint = 'api/device/' + uuid
+        r = requests.put(self.url + endpoint, headers=self.calc_auth(endpoint, "PUT", uuid), data=json.dumps(new_device))
         return r.status_code
 
     def delete_device(self, uuid):
-        r = requests.delete(self.url + 'api/device/' + uuid, headers=self.calc_auth("api/device/", "DELETE", uuid))
+        endpoint = 'api/device/' + uuid
+        r = requests.delete(self.url + endpoint, headers=self.calc_auth(endpoint, "DELETE", uuid))
         return r.status_code, r.content
 
     # --------------------------------------------------------------
@@ -52,11 +46,13 @@ class ApiDeclarations:
     #       DEVICE COLLECTION
     # --------------------------------------------------------------
     def get_all_devices(self):
-        r = requests.get(self.url + 'api/device/', headers=self.calc_auth("api/device/", "GET"))
+        endpoint = 'api/device/'
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code, r.json()
 
     def update_all_devices(self, device_object_list):
-        r = requests.put(self.url + 'api/device/', headers=self.calc_auth("api/device/", "PUT"), json=device_object_list)
+        endpoint = 'api/device/'
+        r = requests.put(self.url + endpoint, headers=self.calc_auth(endpoint, "PUT"), json=device_object_list)
         return r.status_code
 
     # --------------------------------------------------------------
@@ -64,20 +60,20 @@ class ApiDeclarations:
     #       DEVICE CONFIGURATION
     # --------------------------------------------------------------
     def get_device_config_list(self, uuid):
-        r = requests.get(self.url + 'api/devicetclv/' + uuid,
-                         headers=self.calc_auth("api/devicetclv/", "GET", uuid))
+        endpoint = "api/devicetclv/" + uuid
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code, r.json()
 
     def get_device_config(self, uuid, type_tclv):
+        endpoint = 'api/cmd/Param/' + uuid
         tclv_to_send = '{"Data": [{"Type": ' + str(type_tclv) + ',"Control": 0, "Value": ""}]}'
-        r = requests.post(self.url + 'api/cmd/Param/' + uuid,
-                          headers=self.calc_auth("api/cmd/Param/", "POST", uuid), data=tclv_to_send)
+        r = requests.post(self.url + endpoint, headers=self.calc_auth(endpoint, "POST"), data=tclv_to_send)
         return r.status_code, r.json()
 
-    def update_device_config(self, uuid, type, value):
-        tclv_to_send = '{"Data": [{"Type": ' + str(type) + ',"Control": 1, "Value": "' + str(value) + '"}]}'
-        r = requests.post(self.url + 'api/cmd/Param/' + uuid,
-                          headers=self.calc_auth("api/cmd/Param/", "POST", uuid), data=tclv_to_send)
+    def update_device_config(self, uuid, typ, value):
+        endpoint = 'api/cmd/Param/' + uuid
+        tclv_to_send = '{"Data": [{"Type": ' + str(typ) + ',"Control": 1, "Value": "' + str(value) + '"}]}'
+        r = requests.post(self.url + endpoint, headers=self.calc_auth(endpoint, "POST"), data=tclv_to_send)
         return r.status_code
 
     # --------------------------------------------------------------
@@ -85,30 +81,31 @@ class ApiDeclarations:
     #       REBOOT DEVICE
     # --------------------------------------------------------------
     def reboot_device(self, uuid):
-        r = requests.post(self.url + 'api/device/' + uuid + '/reboot',
-                          headers=self.calc_auth("api/device/" + uuid + "/reboot", "POST"))
+        endpoint = 'api/device/' + uuid + '/reboot'
+        r = requests.post(self.url + endpoint, headers=self.calc_auth(endpoint, "POST"))
         return r.status_code
 
     def reboot_device_list(self, uuid_list):
-        r = requests.post(self.url + 'api/device/reboot', headers=self.calc_auth("api/device/reboot", "POST"),
-                          json=uuid_list)
+        endpoint = 'api/device/reboot'
+        r = requests.post(self.url + endpoint, headers=self.calc_auth(endpoint, "POST"), json=uuid_list)
         return r.status_code
     # --------------------------------------------------------------
 
     #       SESSIONS
     # --------------------------------------------------------------
     def get_session(self, uuid):
-        r = requests.get(self.url + 'api/session/' + uuid,
-                         headers=self.calc_auth("api/session/", "GET", uuid))
+        endpoint = 'api/session/' + uuid
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET", uuid))
         return r.status_code, r.json()
 
     def update_session(self, uuid, new_session):
-        r = requests.put(self.url + 'api/session/' + uuid,
-                         headers=self.calc_auth("api/session/", "PUT", uuid), data=json.dumps(new_session))
+        endpoint = 'api/session/' + uuid
+        r = requests.put(self.url + endpoint, headers=self.calc_auth(endpoint, "PUT"), data=json.dumps(new_session))
         return r.status_code
 
     def delete_session(self, uuid):
-        r = requests.delete(self.url + 'api/session/' + uuid, headers=self.calc_auth("api/session/"+uuid, "DELETE"))
+        endpoint = 'api/session/' + uuid
+        r = requests.delete(self.url + endpoint, headers=self.calc_auth(endpoint, "DELETE"))
         return r.status_code
 
     # --------------------------------------------------------------
@@ -116,15 +113,18 @@ class ApiDeclarations:
     #       SESSION LIST
     # --------------------------------------------------------------
     def get_session_list(self):
-        r = requests.get(self.url + 'api/session/', headers=self.calc_auth("api/session/", "GET"))
+        endpoint = 'api/session/'
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code, r.json()
 
     def create_session(self, session_object):
-        r = requests.post(self.url + 'api/session/', headers=self.calc_auth("api/session/", "POST"), json=session_object)
+        endpoint = 'api/session/'
+        r = requests.post(self.url + endpoint, headers=self.calc_auth(endpoint, "POST"), json=session_object)
         return r.status_code
 
     def update_session_list(self, sessions_object):
-        r = requests.put(self.url + 'api/session/', headers=self.calc_auth("api/session/", "PUT"), json=sessions_object)
+        endpoint = 'api/session/'
+        r = requests.put(self.url + endpoint, headers=self.calc_auth(endpoint, "PUT"), json=sessions_object)
         return r.status_code
 
     # --------------------------------------------------------------
@@ -132,12 +132,13 @@ class ApiDeclarations:
     #       SESSION RESTART
     # --------------------------------------------------------------
     def restart_session(self, uuid):
-        r = requests.post(self.url + 'api/session/' + uuid + '/restart',
-                          headers=self.calc_auth('api/session/' + uuid + '/restart', "POST"))
+        endpoint = 'api/session/' + uuid + '/restart'
+        r = requests.post(self.url + endpoint, headers=self.calc_auth(endpoint, "POST"))
         return r.status_code
 
     def restart_session_list(self, uuid_list):
-        r = requests.post(self.url + 'api/session/restart', headers=self.calc_auth("api/session/restart", "POST"), json=uuid_list)
+        endpoint = 'api/session/restart'
+        r = requests.post(self.url + endpoint, headers=self.calc_auth(endpoint, "POST"), json=uuid_list)
         return r.status_code
 
     # --------------------------------------------------------------
@@ -145,15 +146,18 @@ class ApiDeclarations:
     #       USER
     # --------------------------------------------------------------
     def get_user(self, username):
-        r = requests.get(self.url + 'api/user/' + username, headers=self.calc_auth("api/user/" + username, "GET"))
+        endpoint = 'api/user/' + username
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code, r.json()
 
     def update_user(self, username, user_object):
-        r = requests.put(self.url + 'api/user/' + username, headers=self.calc_auth("api/user/" + username, "PUT"), json=user_object)
+        endpoint = 'api/user/' + username
+        r = requests.put(self.url + endpoint, headers=self.calc_auth(endpoint, "PUT"), json=user_object)
         return r.status_code
 
     def delete_user(self, username):
-        r = requests.delete(self.url + 'api/user/' + username, headers=self.calc_auth("api/user/" + username, "DELETE"))
+        endpoint = 'api/user/' + username
+        r = requests.delete(self.url + endpoint, headers=self.calc_auth(endpoint, "DELETE"))
         return r.status_code
 
     # --------------------------------------------------------------
@@ -161,21 +165,23 @@ class ApiDeclarations:
     #       USER LIST
     # --------------------------------------------------------------
     def get_user_list(self):
-        r = requests.get(self.url + 'api/user/', headers=self.calc_auth("api/user/", "GET"))
+        endpoint = 'api/user/'
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code, r.json()
 
     def create_user(self, username, password):
+        endpoint = 'api/user/'
         sc, cont = self.get_user_list()
         cont[0]['Username'] = username
         cont[0]['Password'] = password
         cont[0]["IsActive"] = True
         cont[0]["IsAPI"] = False
-        print(cont)
-        r = requests.post(self.url + 'api/user/', headers=self.calc_auth("api/user/", "POST"), json=cont[0])
+        r = requests.post(self.url + endpoint, headers=self.calc_auth(endpoint, "POST"), json=cont[0])
         return r.status_code
 
     def update_user_list(self, user_list_object):
-        r = requests.put(self.url + 'api/user/', headers=self.calc_auth("api/user/", "PUT"), json=user_list_object)
+        endpoint = 'api/user/'
+        r = requests.put(self.url + endpoint, headers=self.calc_auth(endpoint, "PUT"), json=user_list_object)
         return r.status_code
 
     # --------------------------------------------------------------
@@ -183,20 +189,22 @@ class ApiDeclarations:
     #       CONFIG
     # --------------------------------------------------------------
     def get_config(self):
-        r = requests.get(self.url + 'api/config/', headers=self.calc_auth("api/config/", "GET"))
+        endpoint = 'api/config/'
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code, r.json()
 
     def update_config(self, config_object):
-        r = requests.put(self.url + 'api/config/', headers=self.calc_auth("api/config/", "PUT"), json=config_object)
+        endpoint = 'api/config/'
+        r = requests.put(self.url + endpoint, headers=self.calc_auth(endpoint, "PUT"), json=config_object)
         return r.status_code
 
     # --------------------------------------------------------------
 
     #       LIVE VIEW
     # --------------------------------------------------------------
-    def get_live_view(self, uuid, type, file_lv):
-        r = requests.get(self.url + 'api/live/device/' + uuid + '/' + type + file_lv,
-                         headers=self.calc_auth('api/live/device/' + uuid + '/' + type + file_lv, "GET"))
+    def get_live_view(self, uuid, typ, file_lv):
+        endpoint = 'api/live/device/' + uuid + '/' + typ + file_lv
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code
 
     # --------------------------------------------------------------
@@ -204,14 +212,17 @@ class ApiDeclarations:
     #       STATUS
     # --------------------------------------------------------------
     def get_status(self):
-        r = requests.get(self.url + 'api/status/', headers=self.calc_auth("api/status/", "GET"))
+        endpoint = 'api/status/'
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code, r.json()
 
     # --------------------------------------------------------------
 
-    # #       HTTP BACKEND
-    # # --------------------------------------------------------------
-    # def set_http(self, uuid, img):
-    #     r = requests.put(self.url + 'backend/' + uuid, headers=self.calc_auth('backend/' + uuid, "PUT", uuid, True), files=img)
-    #     return r.status_code
-    # # --------------------------------------------------------------
+    #       HTTP BACKEND
+    # --------------------------------------------------------------
+    def set_http(self, uuid, img):
+        endpoint = 'backend/' + uuid
+        m = MultipartEncoder(fields=img)
+        r = requests.put(self.url + endpoint, headers=self.calc_auth(endpoint, "PUT", m.content_type), data=m)
+        return r.status_code
+    # --------------------------------------------------------------
