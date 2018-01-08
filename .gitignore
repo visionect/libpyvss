@@ -7,3 +7,6 @@ vss_python_api.egg-info/*
 convert.sh
 .cache/
 setup.cfg
+build_upload.sh
+convert.sh
+README.rst
