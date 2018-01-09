@@ -288,6 +288,16 @@ status_code, response (optional) = vss_api_instance.{function(params)}
 
 ----
 
+#### Device status
+
+ `get_device_status(uuid, start, end, group)`
+
+ - params: uuid *string*, start *string*, end *string*, group *string*
+    - example: `get_device_status(uuid, '1515153600', '1515412800', 'true')`
+ - returns: status_code *int*, response *json*
+
+----
+
 #### HTTP Backend
 
 Upload an image to the device via HTTP backend. Make sure device's backend is set to the HTTP.

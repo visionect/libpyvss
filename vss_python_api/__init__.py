@@ -218,6 +218,17 @@ class ApiDeclarations:
 
     # --------------------------------------------------------------
 
+    #       DEVICE STATUS
+    # --------------------------------------------------------------
+    def get_device_status(self, uuid, start, end, group):
+        endpoint = 'api/devicestatus/' + uuid + '?' + start + ',' + end + ',' + group
+        auth_endpoint = 'api/devicestatus/' + uuid
+        print(endpoint)
+        r = requests.get(self.url + endpoint, headers=self.calc_auth(auth_endpoint, "GET"))
+        return r.status_code, r.json()
+
+    # --------------------------------------------------------------
+
     #       HTTP BACKEND
     # --------------------------------------------------------------
     def set_http(self, uuid, img):
