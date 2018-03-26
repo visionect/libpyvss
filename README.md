@@ -1,4 +1,4 @@
-This is a package implementing Visionect API in Python (version 2.7).
+This is a package implementing Visionect API in Python (versions 2.7.11+ and 3.5.1+ supported).
 
 Check [API documentation](https://api.visionect.com/) for more info.
 
