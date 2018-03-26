@@ -6,7 +6,7 @@ import time
 import wsgiref.handlers
 import json
 from requests_toolbelt import MultipartEncoder
-
+import sys
 
 class ApiDeclarations:
     def __init__(self, url, key, secret):
@@ -19,8 +19,12 @@ class ApiDeclarations:
             'Date': wsgiref.handlers.format_date_time(dt),
             'Content-Type': content_type
         }
-        h = hmac.new(self.secret, verb + '\n' + content + '\n' + headers['Content-Type'] + '\n' + headers['Date'] + '\n/' + endpoint, hashlib.sha256)
-        headers['Authorization'] = self.key + ':' + base64.encodestring(h.digest()).strip()
+        if (sys.version_info[0] >= 3):
+            h = hmac.new(bytes(self.secret, "utf-8"), bytes(verb + "\n" + content + "\n" + headers["Content-Type"] + "\n" + headers["Date"] + "\n/" + endpoint, "utf-8"), hashlib.sha256)
+            headers['Authorization'] = bytes(self.key + ":", "utf-8") + base64.encodebytes(h.digest()).strip()
+        else:
+            h = hmac.new(self.secret, verb + "\n" + content + "\n" + headers["Content-Type"] + "\n" + headers["Date"] + "\n/" + endpoint, hashlib.sha256)
+            headers['Authorization'] = self.key + ":" + base64.encodestring(h.digest()).strip()
 
         return headers
 
@@ -39,7 +43,7 @@ class ApiDeclarations:
     def delete_device(self, uuid):
         endpoint = 'api/device/' + uuid
         r = requests.delete(self.url + endpoint, headers=self.calc_auth(endpoint, "DELETE", uuid))
-        return r.status_code, r.content
+        return r.status_code
 
     # --------------------------------------------------------------
 
@@ -221,10 +225,8 @@ class ApiDeclarations:
     #       DEVICE STATUS
     # --------------------------------------------------------------
     def get_device_status(self, uuid, start, end, group):
-        endpoint = 'api/devicestatus/' + uuid + '?' + start + ',' + end + ',' + group
-        auth_endpoint = 'api/devicestatus/' + uuid
-        print(endpoint)
-        r = requests.get(self.url + endpoint, headers=self.calc_auth(auth_endpoint, "GET"))
+        endpoint = 'api/devicestatus/' + uuid
+        r = requests.get(self.url + endpoint + '?from=' + start + '&to=' + end + '&group=' + group, headers=self.calc_auth(endpoint, "GET"))
         return r.status_code, r.json()
 
     # --------------------------------------------------------------
@@ -237,3 +239,11 @@ class ApiDeclarations:
         r = requests.put(self.url + endpoint, headers=self.calc_auth(endpoint, "PUT", m.content_type), data=m)
         return r.status_code
     # --------------------------------------------------------------
+
+# my_api = ApiDeclarations("http://soofa-1.dk.visionect.com:8081/", "3320bc819ed6cef5", "le7hd7vPh7ulBSeJXbc85XOrHZbGTjjySKF8Vak8DJc")
+# uuid = "36005700-0e51-3630-3838-393500000000"
+#
+# scd, resp = my_api.get_device_status(uuid, "1518084800", "1520501176", "true")
+#
+# print("wutt \n")
+# print("Device status code: {} resp {}".format(scd, resp))
