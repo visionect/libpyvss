@@ -19,6 +19,24 @@ vss_api_instance = ApiDeclarations(url, key, secret)
 status_code, response (optional) = vss_api_instance.{function(params)}
 ```
 
+#### change an app on device
+
+```python
+status, content = vss_api_instance.get_session(uuid)
+content['Backend']['Fields']['url'] = "you_app.url"
+vss_api_instance.update_session(uuid, cont)
+```
+
+#### change default app
+
+```python
+status, content = vss_api_instance.get_config()
+content['Engine']['Backend']['HTML']['DefaultFields']['url'] = "you_app.url"
+vss_api_instance.update_config(cont)
+```
+
+----
+
 ### Function list
 
 #### Device
