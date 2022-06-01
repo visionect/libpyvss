@@ -1,3 +1,10 @@
+
+# DEPRECATED
+
+Please use pip install git+https://github.com/SeraphimSerapis/libpyvss.git@master
+
+----
+
 This is a package implementing Visionect API in Python (versions 2.7.11+ and 3.5.1+ supported).
 
 Check [API documentation](https://api.visionect.com/) for more info.
